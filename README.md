@@ -4,4 +4,6 @@
 Usage: `iptv.rb [url]`
 
 example
-	ruby iptv.rb http://tv6.byr.cn/hls/cctv1hd.m3u8
+```
+ruby iptv.rb http://tv6.byr.cn/hls/cctv1hd.m3u8
+```
