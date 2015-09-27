@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+# Copyright (C) 2015  Yang Xin
 # author: yang xin<yx-1994@hotmail.com>
 
 require 'open-uri'
