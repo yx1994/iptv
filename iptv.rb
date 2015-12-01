@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-# Copyright (C) 2015  Yang Xin
-# author: yang xin<yx-1994@hotmail.com>
+# Copyright (C) 2015  Yang Xin <yx-1994@hotmail.com>
 
 require 'open-uri'
 require 'fiddle'
@@ -13,6 +12,7 @@ name="#{File.basename(url,'.*')}.#{Time.now.strftime('%H.%M.%S')}.ts"
 
 $log=open(name+'.log','ab')
 $err=0
+$max=0
 
 at_exit do
 	$log.close
@@ -21,6 +21,10 @@ end
 def log(s)
 	puts s
 	$log.puts s
+end
+
+def beep
+	print "\a"
 end
 
 producer=Thread.new do
@@ -34,6 +38,10 @@ producer=Thread.new do
 					open(URI.join(url,i)).read
 				end
 				log " + #{i} #{Time.now}"
+				if queue.length>$max
+					$max=queue.length
+					beep
+				end
 			end
 			last=this
 		end
@@ -46,9 +54,10 @@ consumer=Thread.new do
 	open(name,'ab') do |file|
 		while i=queue.pop
 			begin
-				Timeout::timeout(30){file << i.value}
+				Timeout::timeout(60){file << i.value}
 			rescue Timeout::Error => e
 				log e
+				beep
 				$err+=1
 			end
 			log " - #{i[:i]} #{Time.now} #{$err}"
